@@ -80,6 +80,15 @@
     color: #ccc;
     margin-top: 5px;
   }
+
+  /* Mensaje extra loader */
+  #loader .info {
+    font-size: 12px;
+    color: #bbb;
+    margin-top: 10px;
+    text-align: center;
+    max-width: 300px;
+  }
 </style>
 </head>
 <body>
@@ -87,6 +96,7 @@
 <div id="loader">
   <img src="logo.png" alt="Logo El Parcero">
   <p>Cargando</p>
+  <p class="info">Esto sólo aparecerá una vez al día para mejorar tu experiencia.</p>
 </div>
 
 <!-- Contenido principal -->
@@ -131,10 +141,24 @@
 
 <script>
   window.addEventListener("load", () => {
-    setTimeout(() => {
+    const lastVisit = localStorage.getItem("lastVisit");
+    const today = new Date().toDateString();
+    const sessionLoaded = sessionStorage.getItem("sessionLoaded");
+
+    if (lastVisit !== today && !sessionLoaded) {
+      // Primera vez hoy en esta sesión → mostrar loader
+      setTimeout(() => {
+        document.body.classList.add("loaded");
+        localStorage.setItem("lastVisit", today);
+        sessionStorage.setItem("sessionLoaded", "true");
+      }, 1000);
+    } else {
+      // Ya visitó hoy o recarga en la misma sesión → ocultar loader
       document.body.classList.add("loaded");
-    }, 1000); // animación más natural
+    }
   });
 </script>
 </body>
 </html>
+
+
